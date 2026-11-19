@@ -1,0 +1,244 @@
+@import 'tailwindcss';
+@import 'leaflet/dist/leaflet.css';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../../app/Enums/*.php';
+@source '../../app/Livewire/**/*.php';
+
+/*
+ | Tema de PMS Track. Los colores salen del logo de PMS (naranja y verde)
+ | y de los mockups aprobados: tinta carbón, fondos grises muy claros y
+ | estados con fondo suave y texto del mismo tono.
+ */
+@theme {
+    --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Títulos y cifras: una grotesca con carácter, pesada como las letras del logo. */
+    --font-display: 'Bricolage Grotesque', 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+
+    --color-brand-50: #fff6ef;
+    --color-brand-100: #fdeee3;
+    --color-brand-200: #fbdac2;
+    --color-brand-300: #f7bb8f;
+    --color-brand-400: #f39a5b;
+    --color-brand-500: #f07d2e;
+    --color-brand-600: #de6817;
+    --color-brand-700: #c2530a;
+    --color-brand-800: #99420c;
+    --color-brand-900: #7a360f;
+
+    --color-ink-50: #f7f8fa;
+    --color-ink-100: #f2f4f6;
+    --color-ink-200: #e6e8ec;
+    --color-ink-300: #d3d7de;
+    --color-ink-400: #9aa2ae;
+    --color-ink-500: #6b7482;
+    --color-ink-600: #4d5562;
+    --color-ink-700: #39404b;
+    --color-ink-800: #2a2f37;
+    --color-ink-900: #1f2328;
+    --color-ink-950: #16191d;
+
+    --color-ok-50: #e9f6ee;
+    --color-ok-100: #d3edde;
+    --color-ok-500: #2fa455;
+    --color-ok-600: #278c48;
+    --color-ok-700: #1f7a40;
+
+    --color-warn-50: #fdf4dc;
+    --color-warn-100: #fae6b0;
+    --color-warn-500: #e5a30b;
+    --color-warn-600: #b7800a;
+    --color-warn-700: #8a5a00;
+
+    --color-bad-50: #fde9e7;
+    --color-bad-100: #fbd2ce;
+    --color-bad-500: #d92d20;
+    --color-bad-600: #c4271c;
+    --color-bad-700: #b42318;
+
+    --color-info-50: #e8effd;
+    --color-info-100: #d2e0fb;
+    --color-info-500: #3b6fe0;
+    --color-info-700: #2b55b5;
+
+    --color-plum-50: #efeafd;
+    --color-plum-100: #e0d7fb;
+    --color-plum-500: #8b6fe8;
+    --color-plum-700: #5b3fc4;
+
+    --color-lima: #8dc63f;
+
+    --shadow-card: 0 1px 2px rgb(31 35 40 / 0.04);
+    --shadow-pop: 0 12px 32px -8px rgb(31 35 40 / 0.18), 0 2px 6px rgb(31 35 40 / 0.06);
+}
+
+@layer base {
+    html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1,
+    h2,
+    .cifra-grande {
+        font-family: var(--font-display);
+        font-optical-sizing: auto;
+    }
+
+    body {
+        @apply bg-ink-100 text-ink-900;
+    }
+
+    /* Las cifras de tablas y tarjetas se alinean entre sí. */
+    table,
+    .cifra {
+        font-variant-numeric: tabular-nums;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-brand-500);
+        outline-offset: 2px;
+    }
+
+    button:not(:disabled),
+    [role='button']:not(:disabled),
+    summary {
+        cursor: pointer;
+    }
+}
+
+@layer components {
+    /* Campo de formulario base: lo usan <x-ui.input>, <x-ui.select> y <x-ui.textarea>. */
+    .campo {
+        @apply block w-full rounded-xl border border-ink-300 bg-white px-3.5 py-2.5 text-[15px] text-ink-900 shadow-card transition placeholder:text-ink-400;
+        @apply focus:border-brand-500 focus:ring-3 focus:ring-brand-500/15 focus:outline-none;
+        @apply disabled:cursor-not-allowed disabled:bg-ink-50 disabled:text-ink-500;
+    }
+
+    .campo-error {
+        @apply border-bad-500 focus:border-bad-500 focus:ring-bad-500/15;
+    }
+
+    select.campo {
+        @apply appearance-none bg-no-repeat pr-10;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234d5562' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-position: right 0.85rem center;
+        background-size: 1.05rem;
+    }
+
+    /* Tabla de datos dentro de una tarjeta. */
+    .tabla {
+        @apply w-full text-left text-[15px];
+    }
+
+    .tabla thead th {
+        @apply border-b border-ink-200 bg-ink-50 px-6 py-3 text-[14px] font-semibold whitespace-nowrap text-ink-600;
+    }
+
+    .tabla tbody td {
+        @apply border-b border-ink-200 px-6 py-3.5 align-middle;
+    }
+
+    .tabla tbody tr:last-child td {
+        @apply border-b-0;
+    }
+
+    .enlace {
+        @apply font-semibold text-brand-700 hover:text-brand-800 hover:underline;
+    }
+}
+
+/* Barra de progreso de la navegación de Livewire y mapa de Leaflet con el estilo de la app. */
+.leaflet-container {
+    font-family: var(--font-sans);
+    border-radius: 0.875rem;
+    z-index: 0;
+}
+
+.pin-entrega {
+    filter: drop-shadow(0 3px 4px rgb(31 35 40 / 0.3));
+}
+
+/*
+ | Movimiento. Solo responde a una acción o a un dato que cambió, y se apaga
+ | por completo cuando el sistema pide reducir el movimiento.
+ */
+@keyframes entrada-pagina {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+}
+
+.entrada-pagina > * {
+    animation: entrada-pagina 0.22s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/* El anillo del "rollo" se traza al aparecer y transita cuando cambia su valor. */
+@keyframes trazo-rollo {
+    from {
+        stroke-dashoffset: var(--rollo-largo);
+    }
+}
+
+.rollo-arco {
+    transition: stroke-dashoffset 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    animation: trazo-rollo 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.rollo-papel {
+    transition: r 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Borde dentado de una tirilla de datáfono (comprobantes y resultado de la consulta). */
+.tirilla {
+    --diente: 10px;
+    background: #fff;
+    -webkit-mask:
+        conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--diente) 51% repeat-x,
+        linear-gradient(#000 0 0) top / 100% calc(100% - var(--diente) / 2) no-repeat;
+    mask:
+        conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--diente) 51% repeat-x,
+        linear-gradient(#000 0 0) top / 100% calc(100% - var(--diente) / 2) no-repeat;
+    padding-bottom: calc(var(--diente) / 2);
+}
+
+.corte {
+    border-top: 2px dashed var(--color-ink-200);
+}
+
+/* Estado de carga de las acciones de Livewire: la zona afectada se atenúa. */
+.cargando {
+    opacity: 0.55;
+    transition: opacity 0.15s;
+}
+
+@keyframes brillo {
+    to {
+        background-position: -200% 0;
+    }
+}
+
+.esqueleto {
+    border-radius: 0.5rem;
+    background: linear-gradient(90deg, var(--color-ink-100) 25%, var(--color-ink-50) 50%, var(--color-ink-100) 75%);
+    background-size: 200% 100%;
+    animation: brillo 1.3s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
